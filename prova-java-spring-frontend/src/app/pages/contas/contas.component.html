@@ -1,0 +1,91 @@
+<section class="contas container-fluid">
+  <h1> Cadastrar Contas</h1>
+  <div class="card shadow">
+    <form class="cadastrar_contas w-50 mt-4" [formGroup]="contaForm">
+      <div class="form-group">
+        <label for="pessoas" class="form-label mt-1">Pessoa: </label>
+        <select name="pessoas" id="pessoas" class="form-select" formControlName="pessoa">
+          <option value="" selected disabled>-- Selecione a Pessoa --</option>
+          <option [value]="pessoa.id" *ngFor="let pessoa of pessoas"> {{pessoa.nome}} - {{pessoa.cpf | mask: "000.000.000-00"}} </option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="numeConta" class="form-label mt-1">Numero da conta: </label>
+        <input type="number" class="form-control" id="numeroConta" formControlName="numeroConta"  maxlength="10">
+      </div>
+      <div class="w-100 d-flex justify-content-center mt-4">
+        <button type="button" class="btn btn-primary" (click)="salvarConta(contaForm.value)">Salvar</button>
+      </div>
+    </form>
+  </div>
+  <div class="alert alert-danger mt-2" *ngIf="messageError">
+    <span> {{messageError.erro}}</span>
+    <ul class="mb-0">
+      <li *ngFor="let motivo of messageError.motivos"> {{motivo}}</li>
+    </ul>
+  </div>
+
+  <div class="tabela-contas shadow mt-5">
+
+  <table mat-table [dataSource]="dataContas" matSort>
+
+    <ng-container matColumnDef="nomePessoa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong>Nome</strong> </th>
+      <td mat-cell *matCellDef="let element"> {{element.pessoa.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="cpfPessoa">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong> CPF </strong> </th>
+      <td mat-cell *matCellDef="let element"> {{element.pessoa.cpf | mask: '000.000.000-00'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="numeroConta">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong>Numero da Conta</strong>  </th>
+      <td mat-cell *matCellDef="let element"> {{element.numeroConta}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="editar">
+      <th mat-header-cell *matHeaderCellDef class="bg-default"><strong>Editar</strong></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button class="btn-action" (click)="editarConta(element)">
+          <mat-icon class="mat-18 text-primary">edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="remover">
+      <th mat-header-cell *matHeaderCellDef class="bg-default"><strong>Remover</strong></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button class="btn-action" data-bs-toggle="modal" data-bs-target="#exampleModal" (click)="confirmarRemocao(element)">
+          <mat-icon class="mat-18 text-danger" >delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20, 50]">
+  </mat-paginator>
+
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Remover Pessoa</h1>
+        </div>
+        <div class="modal-body">
+          Deseja Remover a conta de numero:  <strong> {{contaAtual.numeroConta}} </strong> da pessoa <strong>{{contaAtual.pessoa?.nome}}</strong> ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-danger" (click)="removerConta(contaAtual)" data-bs-dismiss="modal">Remover</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+</section>

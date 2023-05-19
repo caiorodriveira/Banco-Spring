@@ -1,0 +1,30 @@
+
+section.movimentacao{
+  width: 100vw;
+  /* height: 65vh; */
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.card{
+  width: 70%;
+  height: 50vh;
+  display: flex;
+  align-items: center;
+}
+
+.tabela-movimentacao{
+  width: 40%;
+  border-radius: 10px;
+}
+
+.bg-default{
+  background-color: #3d7ab0 !important;
+}
+.btn-action{
+  background-color: #fff;
+  border: none;
+}

@@ -1,0 +1,30 @@
+
+section.contas{
+  width: 100vw;
+  /* height: 65vh; */
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.card{
+  width: 70%;
+  min-height: 30vh;
+  display: flex;
+  align-items: center;
+}
+
+.tabela-contas{
+  width: 80%;
+  border-radius: 10px;
+}
+
+.bg-default{
+  background-color: #3d7ab0 !important;
+}
+.btn-action{
+  background-color: #fff;
+  border: none;
+}

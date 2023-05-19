@@ -1,0 +1,91 @@
+<section class="pessoas container-fluid">
+  <h1> Cadastrar Pessoas</h1>
+  <div class="card shadow">
+    <form class="cadastrar_pessoas w-50 mt-4" [formGroup]="pessoaForm">
+      <div class="form-group">
+        <label for="nome" class="form-label mt-1">Nome: </label>
+        <input type="text" class="form-control" id="nome" required formControlName="nome">
+      </div>
+      <div class="form-group">
+        <label for="cpf" class="form-label mt-1">CPF: </label>
+        <input type="text" class="form-control" id="cpf" placeholder="000.000.000-00" required formControlName="cpf"  maxlength="14" onkeypress="return event.charCode >= 48 && event.charCode <= 57" mask="000.000.000-00">
+      </div>
+      <div class="form-group mt-1">
+        <label for="endereco" class="form-label">Endereço: </label>
+        <input type="text" class="form-control" id="endereco" placeholder="R. Exemplo " required formControlName="endereco">
+      </div>
+      <div class="w-100 d-flex justify-content-center mt-4">
+        <button type="button" class="btn btn-primary" (click)="salvarPessoa(pessoaForm.value)">Salvar</button>
+      </div>
+    </form>
+  </div>
+  <div class="alert alert-danger mt-2" *ngIf="messageError">
+    <span> {{messageError.erro}}</span>
+    <ul class="mb-0">
+      <li *ngFor="let motivo of messageError.motivos"> {{motivo}}</li>
+    </ul>
+  </div>
+
+  <div class="tabela-pessoas shadow mt-5">
+
+  <table mat-table [dataSource]="dataPessoas" matSort>
+
+    <ng-container matColumnDef="registro">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong>Nome</strong> </th>
+      <td mat-cell *matCellDef="let element"> {{element.nome}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong> CPF </strong> </th>
+      <td mat-cell *matCellDef="let element"> {{element.cpf | mask: '000.000.000-00'}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="endereco">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header class="bg-default"> <strong>Endereço</strong>  </th>
+      <td mat-cell *matCellDef="let element"> {{element.endereco}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="editar">
+      <th mat-header-cell *matHeaderCellDef class="bg-default"><strong>Editar</strong></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button class="btn-action">
+          <mat-icon class="mat-18 text-primary" (click)="editarPessoa(element)" >edit</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="remover">
+      <th mat-header-cell *matHeaderCellDef class="bg-default"><strong>Remover</strong></th>
+      <td mat-cell *matCellDef="let element">
+        <button mat-icon-button class="btn-action" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <mat-icon class="mat-18 text-danger" (click)="confirmarRemocao(element)">delete</mat-icon>
+        </button>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+  </table>
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 20, 50]">
+  </mat-paginator>
+  <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" >
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Remover Pessoa</h1>
+        </div>
+        <div class="modal-body">
+          Deseja Remover <strong> {{pessoaAtual.nome}} </strong> ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Não</button>
+          <button type="button" class="btn btn-danger" (click)="removerPessoa(pessoaAtual)">Remover</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+
+</section>

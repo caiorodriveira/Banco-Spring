@@ -1,0 +1,29 @@
+
+section.pessoas{
+  width: 100vw;
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.card{
+  width: 50%;
+  height: 40vh;
+  display: flex;
+  align-items: center;
+}
+
+.tabela-pessoas{
+  width: 80%;
+  border-radius: 10px;
+}
+
+.bg-default{
+  background-color: #3d7ab0 !important;
+}
+.btn-action{
+  background-color: #fff;
+  border: none;
+}
