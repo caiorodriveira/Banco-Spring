@@ -1,32 +1,80 @@
 package br.senai.sc.models;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import org.springframework.stereotype.Component;
+import br.senai.sc.enums.Roles;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import java.util.Collection;
+import java.util.List;
 
-@Getter
-@Setter
-@AllArgsConstructor
+@Data
+
 @NoArgsConstructor
-@Component
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "tb_users")
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Campo obrigatório!")
-    private String name;
+    @NotEmpty(message = "Campo login obrigatório!")
+    @Column(unique = true, nullable = false)
+    private String login;
 
-    @NotEmpty(message = "Campo obrigatório!")
+    @Column(nullable = false)
+    @NotEmpty(message = "Campo senha obrigatório!")
+    private String senha;
+
+    @NotEmpty(message = "Campo nome obrigatório!")
+    @Column(nullable = false)
+    private String nome;
+
+    @NotEmpty(message = "Campo email  obrigatório!")
     @Email(message = "E-mail inválido!")
     @Column(unique = true)
     private String email;
+
+    @Column(name = "ds_role")
+    private Roles role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        if(role == Roles.ADMIN) return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+    }
+
+    @Override
+    public String getPassword() {
+        return getSenha();
+    }
+
+    @Override
+    public String getUsername() {
+        return getLogin();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
