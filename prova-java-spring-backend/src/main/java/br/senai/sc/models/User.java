@@ -14,6 +14,7 @@ import java.util.List;
 
 @Data
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "tb_users")
