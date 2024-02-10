@@ -2,6 +2,7 @@ package br.senai.sc.controllers;
 
 import br.senai.sc.DTO.LoginDTO;
 import br.senai.sc.DTO.UserDTO;
+import br.senai.sc.config.TokenSecurity;
 import br.senai.sc.exceptions.NotFoundException;
 import br.senai.sc.models.User;
 import br.senai.sc.services.UserService;
@@ -28,6 +29,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private TokenSecurity tokenSecurity;
+
     @GetMapping
     ResponseEntity listar(){
         return ResponseEntity.status(HttpStatus.OK).body(userService.findAll());
@@ -38,7 +42,9 @@ public class UserController {
          var userAuthentication = new UsernamePasswordAuthenticationToken(login.getUsername(), login.getPassword());
          var auth = authManager.authenticate(userAuthentication);
 
-         return ResponseEntity.status(HttpStatus.ACCEPTED).body("logado com sucesso");
+         var token = tokenSecurity.generateToken((User) auth.getPrincipal());
+
+         return ResponseEntity.status(HttpStatus.ACCEPTED).body(token);
     }
 
     @PostMapping
@@ -73,7 +79,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     ResponseEntity editarUsuario(@RequestBody UserDTO user, @PathVariable Long id) throws Exception{
-        Optional<User> userFounded =userService.findById(id);
+        Optional<User> userFounded = userService.findById(id);
         if(userFounded.isEmpty()){
             throw new NotFoundException();
         }
