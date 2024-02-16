@@ -21,6 +21,7 @@ public class SecurityConfig {
     @Autowired
     private SecurityFilter securityFilter;
 
+
     @Bean
     SecurityFilterChain securityFilterChain (HttpSecurity httpSecurity) throws Exception{
         return httpSecurity
@@ -30,6 +31,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .antMatchers("/swagger-ui/**", "/v3/api-docs/**", "/docs").permitAll()
                         .antMatchers(HttpMethod.POST, "/usuario/login").permitAll()
+                        .antMatchers("/pessoas/**", "/contas/**").hasRole("FUNC")
+                        .antMatchers("/movimentacao/**").hasRole("USER")
+                        .antMatchers("/usuario/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) //verifica antes das condições anteriores se tem o filtro autenticado

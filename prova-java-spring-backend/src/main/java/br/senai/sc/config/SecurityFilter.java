@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.webjars.NotFoundException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -29,7 +30,7 @@ public class SecurityFilter extends OncePerRequestFilter {
 
         if(token != null){
             var login = tokenSecurity.validateToken(token);
-            UserDetails user = userRepository.findByLogin(login).get();
+            UserDetails user = userRepository.findByLogin(login).orElseThrow(() -> new RuntimeException("Não Autorizado"));
 
             var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
